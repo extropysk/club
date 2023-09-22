@@ -37,13 +37,14 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String     @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?    @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
+  activities    Activity[]
 }
 
 model VerificationToken {
@@ -52,4 +53,118 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Activity {
+  id                            String     @id
+  external_id                   String?
+  upload_id                     BigInt?
+  athlete_id                    BigInt?
+  name                          String?
+  distance                      Float?
+  moving_time                   Int?
+  elapsed_time                  Int?
+  total_elevation_gain          Float?
+  elev_high                     Float?
+  elev_low                      Float?
+  type                          String?
+  sport_type                    SportType?
+  start_date                    DateTime?
+  start_date_local              DateTime?
+  timezone                      String?
+  start_latlng                  Float[]
+  end_latlng                    Float[]
+  achievement_count             Int?
+  kudos_count                   Int?
+  comment_count                 Int?
+  athlete_count                 Int?
+  photo_count                   Int?
+  total_photo_count             Int?
+  map_id                        String?
+  map_summary_polyline          String?
+  trainer                       Boolean?
+  commute                       Boolean?
+  manual                        Boolean?
+  private                       Boolean?
+  flagged                       Boolean?
+  workout_type                  Int?
+  upload_id_str                 String?
+  average_speed                 Float?
+  max_speed                     Float?
+  has_kudoed                    Boolean?
+  hide_from_home                Boolean?
+  gear_id                       String?
+  kilojoules                    Float?
+  average_watts                 Float?
+  device_watts                  Boolean?
+  max_watts                     Int?
+  weighted_average_watts        Int?
+  user_id                       String
+  user                          User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  utc_offset                    Int?
+  location_city                 String?
+  location_state                String?
+  location_country              String?
+  visibility                    String?
+  has_heartrate                 Boolean?
+  heartrate_opt_out             Boolean?
+  display_hide_heartrate_option Boolean?
+  from_accepted_tag             Boolean?
+  pr_count                      Int?
+  average_cadence               Float?
+  average_heartrate             Float?
+  max_heartrate                 Float?
+}
+
+enum SportType {
+  AlpineSki
+  BackcountrySki
+  Badminton
+  Canoeing
+  Crossfit
+  EBikeRide
+  Elliptical
+  EMountainBikeRide
+  Golf
+  GravelRide
+  Handcycle
+  HighIntensityIntervalTraining
+  Hike
+  IceSkate
+  InlineSkate
+  Kayaking
+  Kitesurf
+  MountainBikeRide
+  NordicSki
+  Pickleball
+  Pilates
+  Racquetball
+  Ride
+  RockClimbing
+  RollerSki
+  Rowing
+  Run
+  Sail
+  Skateboard
+  Snowboard
+  Snowshoe
+  Soccer
+  Squash
+  StairStepper
+  StandUpPaddling
+  Surfing
+  Swim
+  TableTennis
+  Tennis
+  TrailRun
+  Velomobile
+  VirtualRide
+  VirtualRow
+  VirtualRun
+  Walk
+  WeightTraining
+  Wheelchair
+  Windsurf
+  Workout
+  Yoga
 }

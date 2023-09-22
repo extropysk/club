@@ -1,12 +1,9 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
+import { sync } from "be/utils/strava";
 import jsonwebtoken from "jsonwebtoken";
 import NextAuth, { NextAuthOptions } from "next-auth";
-import Auth0Provider from "next-auth/providers/auth0";
-import FacebookProvider from "next-auth/providers/facebook";
-import GithubProvider from "next-auth/providers/github";
-import GoogleProvider from "next-auth/providers/google";
-import TwitterProvider from "next-auth/providers/twitter";
+import StravaProvider from "next-auth/providers/strava";
 
 const prisma = new PrismaClient();
 // For more information on each option (and a full list of options) go to
@@ -30,27 +27,20 @@ export const authOptions: NextAuthOptions = {
   },
   // https://next-auth.js.org/configuration/providers/oauth
   providers: [
-    Auth0Provider({
-      clientId: process.env.AUTH0_ID,
-      clientSecret: process.env.AUTH0_SECRET,
-      issuer: process.env.AUTH0_ISSUER,
-    }),
-    FacebookProvider({
-      clientId: process.env.FACEBOOK_ID,
-      clientSecret: process.env.FACEBOOK_SECRET,
-    }),
-    GithubProvider({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET,
-    }),
-    GoogleProvider({
-      clientId: process.env.GOOGLE_ID,
-      clientSecret: process.env.GOOGLE_SECRET,
-    }),
-    TwitterProvider({
-      clientId: process.env.TWITTER_ID,
-      clientSecret: process.env.TWITTER_SECRET,
-      version: "2.0",
+    StravaProvider({
+      clientId: process.env.STRAVA_ID!,
+      clientSecret: process.env.STRAVA_SECRET!,
+      authorization: { params: { scope: "activity:read" } },
+      token: {
+        async request({ client, params, checks, provider }) {
+          // remove athlete from response
+          const { token_type, expires_at, refresh_token, access_token } =
+            await client.oauthCallback(provider.callbackUrl, params, checks);
+          return {
+            tokens: { token_type, expires_at, refresh_token, access_token },
+          };
+        },
+      },
     }),
   ],
   callbacks: {
@@ -60,7 +50,11 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
 
-    async jwt({ token }) {
+    async jwt({ token, account, user }) {
+      if (account && user) {
+        sync(user.id, account.access_token);
+      }
+
       token.roles = ["admin"];
       return token;
     },
