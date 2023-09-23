@@ -3,14 +3,7 @@ import { prisma } from "be/prisma";
 import { procedure, router } from "be/trpc";
 import { z } from "zod";
 
-const ListSchema = z.object({
-  skip: z.number().nonnegative().default(0),
-  take: z.number().positive().lte(100).default(100),
-  filter: z.string().optional(),
-  orderBy: z.record(z.enum(["asc", "desc"])).optional(),
-});
-
-const Schema = z.object({
+const StatsSchema = z.object({
   from: z.string().datetime(),
   to: z.string().datetime().optional(),
   sportType: z.nativeEnum(SportType).optional(),
@@ -18,7 +11,7 @@ const Schema = z.object({
 
 export const activityRouter = router({
   stats: procedure()
-    .input(Schema)
+    .input(StatsSchema)
     .query(async ({ ctx, input }) => {
       return await prisma.activity.aggregate({
         where: {
