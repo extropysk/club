@@ -4,7 +4,6 @@ import { Overview } from "@/components/dashboard/overview";
 import { RecentSales } from "@/components/dashboard/recent-sales";
 import TeamSwitcher from "@/components/dashboard/team-switcher";
 import { UserNav } from "@/components/dashboard/user-nav";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -12,18 +11,50 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { SportType } from "@prisma/client";
 import { Tabs } from "@radix-ui/react-tabs";
-import { Search } from "lucide-react";
+import { startOfMonth } from "date-fns";
+import { Clock, Footprints, Rocket, Search, Sigma } from "lucide-react";
 import { Metadata } from "next";
 import Image from "next/image";
+import { useState } from "react";
+import { DateRange } from "react-day-picker";
+import { durationToStr } from "utils/date";
+import { round } from "utils/num";
+import { trpc } from "utils/trpc";
 
 export const metadata: Metadata = {
   title: "Dashboard",
   description: "Example dashboard app built using the components.",
 };
 
+const FROM = startOfMonth(new Date());
+
 export default function DashboardPage() {
+  const [date, setDate] = useState<DateRange | undefined>({
+    from: FROM,
+    to: new Date(),
+  });
+  const [sportType, setSportType] = useState<SportType | "">("");
+
+  const { data } = trpc.activity.stats.useQuery({
+    from: date?.from?.toISOString() ?? FROM.toISOString(),
+    to: date?.to?.toISOString(),
+    sportType: sportType === "" ? undefined : sportType,
+  });
+
+  const distance = data?._sum?.distance ?? 0;
+  const totalElevationGain = data?._sum?.total_elevation_gain ?? 0;
+  const movingTime = data?._sum?.moving_time ?? 0;
+  const count = data?._count?.id;
   return (
     <>
       <div className="md:hidden">
@@ -57,8 +88,19 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between space-y-2">
             <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
             <div className="flex items-center space-x-2">
-              <CalendarDateRangePicker />
-              <Button>Download</Button>
+              <CalendarDateRangePicker date={date} setDate={setDate} />
+              <Select value={sportType} onValueChange={setSportType}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select a fruit" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">All</SelectItem>
+                  <SelectItem value="Run">Run</SelectItem>
+                  <SelectItem value="TrailRun">Trail Run</SelectItem>
+                  <SelectItem value="Hike">Hike</SelectItem>
+                  <SelectItem value="Ride">Ride</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <Tabs defaultValue="overview" className="space-y-4">
@@ -79,23 +121,15 @@ export default function DashboardPage() {
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
-                      Total Revenue
+                      Distance
                     </CardTitle>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      className="h-4 w-4 text-muted-foreground"
-                    >
-                      <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                    </svg>
+                    <Footprints size={12} />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">$45,231.89</div>
+                    <div className="text-2xl font-bold">{`${round(
+                      distance / 1000,
+                      1
+                    )} km`}</div>
                     <p className="text-xs text-muted-foreground">
                       +20.1% from last month
                     </p>
@@ -104,25 +138,14 @@ export default function DashboardPage() {
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
-                      Subscriptions
+                      Elevation Gain
                     </CardTitle>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      className="h-4 w-4 text-muted-foreground"
-                    >
-                      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                      <circle cx="9" cy="7" r="4" />
-                      <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-                    </svg>
+                    <Rocket size={12} />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">+2350</div>
+                    <div className="text-2xl font-bold">{`${round(
+                      totalElevationGain
+                    )} m`}</div>
                     <p className="text-xs text-muted-foreground">
                       +180.1% from last month
                     </p>
@@ -130,23 +153,15 @@ export default function DashboardPage() {
                 </Card>
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Sales</CardTitle>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      className="h-4 w-4 text-muted-foreground"
-                    >
-                      <rect width="20" height="14" x="2" y="5" rx="2" />
-                      <path d="M2 10h20" />
-                    </svg>
+                    <CardTitle className="text-sm font-medium">
+                      Moving Time
+                    </CardTitle>
+                    <Clock size={12} />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">+12,234</div>
+                    <div className="text-2xl font-bold">
+                      {durationToStr(movingTime)}
+                    </div>
                     <p className="text-xs text-muted-foreground">
                       +19% from last month
                     </p>
@@ -155,23 +170,12 @@ export default function DashboardPage() {
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
-                      Active Now
+                      Total Activities
                     </CardTitle>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      className="h-4 w-4 text-muted-foreground"
-                    >
-                      <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-                    </svg>
+                    <Sigma size={12} />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">+573</div>
+                    <div className="text-2xl font-bold">{count || "?"}</div>
                     <p className="text-xs text-muted-foreground">
                       +201 since last hour
                     </p>
