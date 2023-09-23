@@ -69,7 +69,9 @@ model Activity {
   elev_low                      Float?
   type                          String?
   sport_type                    SportType?
-  start_date                    DateTime?
+  start_date                    DateTime
+  start_month                   Int
+  start_year                    Int
   start_date_local              DateTime?
   timezone                      String?
   start_latlng                  Float[]
