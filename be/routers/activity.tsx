@@ -15,7 +15,39 @@ const OverviewSchema = z.object({
   sportType: z.nativeEnum(SportType).optional(),
 });
 
+const ListSchema = z.object({
+  skip: z.number().nonnegative().default(0),
+  take: z.number().positive().lte(100).default(100),
+  filter: z.string().optional(),
+  orderBy: z.record(z.enum(["asc", "desc"])).optional(),
+});
+
 export const activityRouter = router({
+  list: procedure()
+    .input(ListSchema)
+    .query(async ({ ctx, input: { filter, orderBy, skip, take } }) => {
+      let where;
+      if (filter) {
+        {
+          where = {
+            OR: [{ name: { contains: filter } }],
+          };
+        }
+      }
+
+      console.log(filter);
+
+      const [total, data] = await prisma.$transaction([
+        prisma.activity.count({ where }),
+        prisma.activity.findMany({
+          where,
+          orderBy,
+          skip,
+          take,
+        }),
+      ]);
+      return { total, data };
+    }),
   dashboard: procedure()
     .input(DashboardSchema)
     .query(async ({ ctx, input }) => {

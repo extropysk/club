@@ -1,7 +1,6 @@
 import { columns } from "@/components/activities/columns";
 import { DataTable } from "@/components/activities/data-table";
 import { UserNav } from "@/components/activities/user-nav";
-import tasks from "@/components/data/tasks.json";
 import { Metadata } from "next";
 import Image from "next/image";
 
@@ -41,7 +40,7 @@ export default function TaskPage() {
             <UserNav />
           </div>
         </div>
-        <DataTable data={tasks} columns={columns} />
+        <DataTable columns={columns} />
       </div>
     </>
   );

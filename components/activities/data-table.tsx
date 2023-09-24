@@ -2,15 +2,11 @@
 
 import {
   ColumnDef,
-  ColumnFiltersState,
-  SortingState,
   VisibilityState,
   flexRender,
   getCoreRowModel,
   getFacetedRowModel,
   getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
@@ -26,41 +22,51 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useDebounce } from "hooks/debounce";
+import { usePagination } from "hooks/pagination";
+import { useSorting } from "hooks/sorting";
+import { useState } from "react";
+import { trpc } from "utils/trpc";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[];
 }
 
 export function DataTable<TData, TValue>({
   columns,
-  data,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+
+  const [filter, setFilter] = useState("");
+  const { sorting, setSorting, orderBy } = useSorting({ start_date: "desc" });
+  const { pagination, setPagination } = usePagination();
+  const debouncedFilter = useDebounce(filter);
+  const { data } = trpc.activity.list.useQuery({
+    filter: debouncedFilter,
+    skip: pagination.pageIndex * pagination.pageSize,
+    take: pagination.pageSize,
+    orderBy,
+  });
 
   const table = useReactTable({
-    data,
+    data: data?.data ?? [],
+    pageCount: data?.total ? Math.ceil(data?.total / pagination.pageSize) : -1,
     columns,
     state: {
       sorting,
       columnVisibility,
       rowSelection,
-      columnFilters,
+      pagination,
     },
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    onPaginationChange: setPagination,
+    manualPagination: true,
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
@@ -68,7 +74,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} />
+      <DataTableToolbar table={table} filter={filter} setFilter={setFilter} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>

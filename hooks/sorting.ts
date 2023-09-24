@@ -1,0 +1,22 @@
+import { useState } from "react";
+
+type OrderBy = Record<string, "asc" | "desc">;
+
+export const useSorting = (defaultOrder: OrderBy = {}) => {
+  const [sorting, setSorting] = useState<SortingState>(
+    Object.entries(defaultOrder).map(([id, value]) => ({
+      id,
+      desc: value === "desc",
+    }))
+  );
+
+  const orderBy = sorting.reduce(
+    (a: OrderBy, v: SortingState) => ({
+      ...a,
+      [v.id]: v.desc === true ? "desc" : "asc",
+    }),
+    {}
+  );
+
+  return { sorting, setSorting, orderBy };
+};
