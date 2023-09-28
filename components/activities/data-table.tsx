@@ -23,13 +23,11 @@ import { useActivityList } from "hooks/activity";
 import { usePagination } from "hooks/pagination";
 import { useSorting } from "hooks/sorting";
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+interface DataTableProps<TData> {
+  columns: ColumnDef<TData>[];
 }
 
-export function DataTable<TData, TValue>({
-  columns,
-}: DataTableProps<TData, TValue>) {
+export function DataTable<TData>({ columns }: DataTableProps<TData>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -39,7 +37,7 @@ export function DataTable<TData, TValue>({
   const { data } = useActivityList({ orderBy, skip, take });
 
   const table = useReactTable({
-    data: data?.data ?? [],
+    data: (data?.data as TData[]) ?? [],
     pageCount: data?.total ? Math.ceil(data?.total / pagination.pageSize) : -1,
     columns,
     state: {
