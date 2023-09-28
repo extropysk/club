@@ -53,6 +53,7 @@ export const columns: ColumnDef<Activity>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
+          <Badge variant="outline">{row.original.sport_type}</Badge>
           <span className="max-w-[500px] truncate font-medium">
             {row.getValue("name")}
           </span>

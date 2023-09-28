@@ -1,3 +1,4 @@
+import { SportTypeSelect } from "@/components/common/sport-type-select";
 import { CalendarDateRangePicker } from "@/components/dashboard/date-range-picker";
 import { MainNav } from "@/components/dashboard/main-nav";
 import { Overview } from "@/components/dashboard/overview";
@@ -41,12 +42,12 @@ export default function DashboardPage() {
     from: FROM_DATE,
     to: new Date(),
   });
-  const [sportType, setSportType] = useState<SportType | "">("");
+  const [sportType, setSportType] = useState<SportType>();
 
   const { data: dashboardData } = trpc.activity.dashboard.useQuery({
     from: date?.from?.toISOString() ?? FROM_DATE.toISOString(),
     to: date?.to?.toISOString(),
-    sportType: sportType === "" ? undefined : sportType,
+    sportType,
   });
 
   const distance = dashboardData?._sum?.distance ?? 0;
@@ -70,24 +71,8 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between space-y-2 flex-wrap">
             <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
             <div className="flex items-center space-x-2">
-              <CalendarDateRangePicker date={date} setDate={setDate} />
-              <Select
-                value={sportType}
-                onValueChange={(value) => {
-                  setSportType(value as SportType);
-                }}
-              >
-                <SelectTrigger className="max-w-[120px]">
-                  <SelectValue placeholder="Select a sport" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="">All</SelectItem>
-                  <SelectItem value="Run">Run</SelectItem>
-                  <SelectItem value="TrailRun">Trail Run</SelectItem>
-                  <SelectItem value="Hike">Hike</SelectItem>
-                  <SelectItem value="Ride">Ride</SelectItem>
-                </SelectContent>
-              </Select>
+              <CalendarDateRangePicker value={date} onChange={setDate} />
+              <SportTypeSelect value={sportType} onChange={setSportType} />
             </div>
           </div>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

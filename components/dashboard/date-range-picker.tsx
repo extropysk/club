@@ -14,11 +14,11 @@ import { format } from "date-fns";
 import { cn } from "utils/ui";
 
 interface Props {
-  setDate: (date: DateRange | undefined) => void;
-  date: DateRange | undefined;
+  onChange: (date: DateRange | undefined) => void;
+  value: DateRange | undefined;
 }
 
-export function CalendarDateRangePicker({ date, setDate }: Props) {
+export function CalendarDateRangePicker({ value, onChange }: Props) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -27,17 +27,17 @@ export function CalendarDateRangePicker({ date, setDate }: Props) {
           variant={"outline"}
           className={cn(
             "w-[240px] justify-start text-left font-normal",
-            !date && "text-muted-foreground"
+            !value && "text-muted-foreground"
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {date?.from ? (
-            date.to ? (
+          {value?.from ? (
+            value.to ? (
               <>
-                {format(date.from, "LLL dd")} - {format(date.to, "LLL dd")}
+                {format(value.from, "LLL dd")} - {format(value.to, "LLL dd")}
               </>
             ) : (
-              format(date.from, "LLL dd")
+              format(value.from, "LLL dd")
             )
           ) : (
             <span>Pick a date</span>
@@ -48,9 +48,9 @@ export function CalendarDateRangePicker({ date, setDate }: Props) {
         <Calendar
           initialFocus
           mode="range"
-          defaultMonth={date?.from}
-          selected={date}
-          onSelect={setDate}
+          defaultMonth={value?.from}
+          selected={value}
+          onSelect={onChange}
           numberOfMonths={2}
         />
       </PopoverContent>
