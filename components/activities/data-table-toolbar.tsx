@@ -6,10 +6,9 @@ import { Table } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
+import { CalendarDateRangePicker } from "@/components/common/date-range-picker";
 import { SportTypeSelect } from "@/components/common/sport-type-select";
-import { CalendarDateRangePicker } from "@/components/dashboard/date-range-picker";
 import { DataTableViewOptions } from "@/components/ui/data-table/view-options";
-import { startOfMonth } from "date-fns";
 import { useStore } from "hooks/store";
 import { priorities, statuses } from "../data/data";
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
@@ -17,11 +16,6 @@ import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
 }
-
-const DEFAULT_DATE_RANGE = {
-  from: startOfMonth(new Date()),
-  to: new Date(),
-};
 
 export function DataTableToolbar<TData>({
   table,
@@ -43,7 +37,7 @@ export function DataTableToolbar<TData>({
           className="h-8 w-[150px] lg:w-[250px]"
         />
         <SportTypeSelect />
-        <CalendarDateRangePicker defaultValue={DEFAULT_DATE_RANGE} />
+        <CalendarDateRangePicker />
         {table.getColumn("status") && (
           <DataTableFacetedFilter
             column={table.getColumn("status")}

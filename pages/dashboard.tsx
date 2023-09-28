@@ -1,5 +1,6 @@
+import { AggregationSelect } from "@/components/common/aggregation-select";
+import { CalendarDateRangePicker } from "@/components/common/date-range-picker";
 import { SportTypeSelect } from "@/components/common/sport-type-select";
-import { CalendarDateRangePicker } from "@/components/dashboard/date-range-picker";
 import { MainNav } from "@/components/dashboard/main-nav";
 import { Overview } from "@/components/dashboard/overview";
 import { RecentSales } from "@/components/dashboard/recent-sales";
@@ -12,18 +13,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { startOfMonth } from "date-fns";
 import { useStore } from "hooks/store";
 import { Clock, Footprints, Rocket, Search, Sigma } from "lucide-react";
 import { Metadata } from "next";
-import { useState } from "react";
 import { durationToStr } from "utils/date";
 import { round } from "utils/num";
 import { trpc } from "utils/trpc";
@@ -33,19 +26,13 @@ export const metadata: Metadata = {
   description: "Example dashboard app built using the components.",
 };
 
-const DEFAULT_DATE_RANGE = {
-  from: startOfMonth(new Date()),
-  to: new Date(),
-};
+const DEFAULT_FROM = startOfMonth(new Date());
 
 export default function DashboardPage() {
-  const [overviewKey, setOverviewKey] = useState("_sum.distance");
-
   const sportType = useStore((state) => state.sportType);
   const dateRange = useStore((state) => state.dateRange);
   const { data: dashboardData } = trpc.activity.dashboard.useQuery({
-    from:
-      dateRange?.from?.toISOString() ?? DEFAULT_DATE_RANGE.from.toISOString(),
+    from: dateRange?.from?.toISOString() ?? DEFAULT_FROM.toISOString(),
     to: dateRange?.to?.toISOString(),
     sportType,
   });
@@ -71,7 +58,7 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between space-y-2 flex-wrap">
             <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
             <div className="flex items-center space-x-2">
-              <CalendarDateRangePicker defaultValue={DEFAULT_DATE_RANGE} />
+              <CalendarDateRangePicker />
               <SportTypeSelect />
             </div>
           </div>
@@ -142,24 +129,10 @@ export default function DashboardPage() {
             <Card className="col-span-4">
               <CardHeader className="flex flex-row items-center justify-between space-y-2">
                 <CardTitle>Overview</CardTitle>
-                <Select value={overviewKey} onValueChange={setOverviewKey}>
-                  <SelectTrigger className="max-w-[180px]">
-                    <SelectValue placeholder="Select a metric" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="_sum.distance">Distance</SelectItem>
-                    <SelectItem value="_sum.total_elevation_gain">
-                      Elevation Gain
-                    </SelectItem>
-                    <SelectItem value="_sum.moving_time">
-                      Moving Time
-                    </SelectItem>
-                    <SelectItem value="_count.id">Total Activities</SelectItem>
-                  </SelectContent>
-                </Select>
+                <AggregationSelect />
               </CardHeader>
               <CardContent>
-                <Overview dataKey={overviewKey} />
+                <Overview />
               </CardContent>
             </Card>
             <Card className="col-span-3">

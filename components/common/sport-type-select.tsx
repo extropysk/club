@@ -8,12 +8,12 @@ import {
 import { SportType } from "@prisma/client";
 import { useStore } from "hooks/store";
 
-interface Data<T> {
+interface Option<T> {
   value: T;
   label: string;
 }
 
-const DATA: Data<SportType | "">[] = [
+const OPTIONS: Option<SportType | "">[] = [
   {
     value: "",
     label: "All",
@@ -51,9 +51,9 @@ export const SportTypeSelect = () => {
         <SelectValue placeholder="Select a sport" />
       </SelectTrigger>
       <SelectContent>
-        {DATA.map((d) => (
-          <SelectItem key={d.value} value={d.value}>
-            {d.label}
+        {OPTIONS.map((option) => (
+          <SelectItem key={option.value} value={option.value}>
+            {option.label}
           </SelectItem>
         ))}
       </SelectContent>

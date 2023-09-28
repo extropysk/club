@@ -1,16 +1,16 @@
 "use client";
 
 import { startOfYear } from "date-fns";
+import { useStore } from "hooks/store";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import { trpc } from "utils/trpc";
 
-interface Props {
-  dataKey: string;
-}
+const DEFAULT_FROM = startOfYear(new Date());
 
-export function Overview({ dataKey }: Props) {
+export function Overview() {
+  const aggregation = useStore((state) => state.aggregation);
   const { data: overviewData } = trpc.activity.overview.useQuery({
-    from: startOfYear(new Date()).toISOString(),
+    from: DEFAULT_FROM.toISOString(),
   });
 
   return (
@@ -30,7 +30,11 @@ export function Overview({ dataKey }: Props) {
           axisLine={false}
           tickFormatter={(value) => `${value}`}
         />
-        <Bar dataKey={dataKey} radius={[4, 4, 0, 0]} className="fill-primary" />
+        <Bar
+          dataKey={aggregation}
+          radius={[4, 4, 0, 0]}
+          className="fill-primary"
+        />
       </BarChart>
     </ResponsiveContainer>
   );

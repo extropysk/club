@@ -11,24 +11,11 @@ import {
 } from "@/components/ui/popover";
 import { format } from "date-fns";
 import { useStore } from "hooks/store";
-import { useEffect } from "react";
-import { DateRange } from "react-day-picker";
 import { cn } from "utils/ui";
 
-interface Props {
-  defaultValue?: DateRange;
-}
-
-export function CalendarDateRangePicker({ defaultValue }: Props) {
+export function CalendarDateRangePicker() {
   const value = useStore((state) => state.dateRange);
   const setDateRange = useStore((state) => state.setDateRange);
-
-  useEffect(() => {
-    if (defaultValue) {
-      console.log("SET");
-      setDateRange(defaultValue);
-    }
-  }, [setDateRange, defaultValue]);
 
   return (
     <Popover>
