@@ -24,7 +24,6 @@ import { useStore } from "hooks/store";
 import { Clock, Footprints, Rocket, Search, Sigma } from "lucide-react";
 import { Metadata } from "next";
 import { useState } from "react";
-import { DateRange } from "react-day-picker";
 import { durationToStr } from "utils/date";
 import { round } from "utils/num";
 import { trpc } from "utils/trpc";
@@ -34,20 +33,20 @@ export const metadata: Metadata = {
   description: "Example dashboard app built using the components.",
 };
 
-const FROM_DATE = startOfMonth(new Date());
+const DEFAULT_DATE_RANGE = {
+  from: startOfMonth(new Date()),
+  to: new Date(),
+};
 
 export default function DashboardPage() {
   const [overviewKey, setOverviewKey] = useState("_sum.distance");
-  const [date, setDate] = useState<DateRange | undefined>({
-    from: FROM_DATE,
-    to: new Date(),
-  });
 
   const sportType = useStore((state) => state.sportType);
-
+  const dateRange = useStore((state) => state.dateRange);
   const { data: dashboardData } = trpc.activity.dashboard.useQuery({
-    from: date?.from?.toISOString() ?? FROM_DATE.toISOString(),
-    to: date?.to?.toISOString(),
+    from:
+      dateRange?.from?.toISOString() ?? DEFAULT_DATE_RANGE.from.toISOString(),
+    to: dateRange?.to?.toISOString(),
     sportType,
   });
 
@@ -72,7 +71,7 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between space-y-2 flex-wrap">
             <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
             <div className="flex items-center space-x-2">
-              <CalendarDateRangePicker value={date} onChange={setDate} />
+              <CalendarDateRangePicker defaultValue={DEFAULT_DATE_RANGE} />
               <SportTypeSelect />
             </div>
           </div>

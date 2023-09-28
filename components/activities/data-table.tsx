@@ -38,6 +38,7 @@ export function DataTable<TData, TValue>({
 
   const filter = useStore((state) => state.filter);
   const sportType = useStore((state) => state.sportType);
+  const dateRange = useStore((state) => state.dateRange);
 
   const { sorting, setSorting, orderBy } = useSorting({ start_date: "desc" });
   const { pagination, setPagination } = usePagination();
@@ -46,6 +47,8 @@ export function DataTable<TData, TValue>({
     filter: debouncedFilter,
     skip: pagination.pageIndex * pagination.pageSize,
     take: pagination.pageSize,
+    from: dateRange?.from?.toISOString(),
+    to: dateRange?.to?.toISOString(),
     sportType,
     orderBy,
   });
