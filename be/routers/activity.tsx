@@ -1,7 +1,7 @@
 import { SportType } from ".prisma/client";
 import { prisma } from "be/prisma";
 import { procedure, router } from "be/trpc";
-import { processOrderBy } from "be/utils/prisma";
+import { processOrderBy } from "utils/prisma";
 import { z } from "zod";
 
 export const BySchema = z.array(z.enum(["start_month", "user_id"])).optional();
@@ -13,6 +13,7 @@ const AggregationSchema = z.object({
   sportType: z.nativeEnum(SportType).optional(),
   orderBy: OrderBySchema,
   by: BySchema,
+  isPublic: z.boolean().default(false),
 });
 
 const ListSchema = z.object({
@@ -23,15 +24,17 @@ const ListSchema = z.object({
   from: z.string().datetime().optional(),
   to: z.string().datetime().optional(),
   orderBy: OrderBySchema,
+  isPublic: z.boolean().default(false),
 });
 
 export const activityRouter = router({
   list: procedure()
     .input(ListSchema)
-    .query(async ({ input }) => {
+    .query(async ({ ctx, input }) => {
       const where = {
         OR: [{ name: { contains: input.filter } }],
         sport_type: input.sportType,
+        user_id: input.isPublic ? undefined : ctx.session.sub,
         start_date: {
           gte: input.from,
           lte: input.to,

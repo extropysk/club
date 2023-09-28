@@ -19,11 +19,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useDebounce } from "hooks/debounce";
+import { useActivityList } from "hooks/activity";
 import { usePagination } from "hooks/pagination";
 import { useSorting } from "hooks/sorting";
-import { useStore } from "hooks/store";
-import { trpc } from "utils/trpc";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -36,22 +34,9 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
 
-  const filter = useStore((state) => state.filter);
-  const sportType = useStore((state) => state.sportType);
-  const dateRange = useStore((state) => state.dateRange);
-
   const { sorting, setSorting, orderBy } = useSorting({ start_date: "desc" });
-  const { pagination, setPagination } = usePagination();
-  const debouncedFilter = useDebounce(filter);
-  const { data } = trpc.activity.list.useQuery({
-    filter: debouncedFilter,
-    skip: pagination.pageIndex * pagination.pageSize,
-    take: pagination.pageSize,
-    from: dateRange?.from?.toISOString(),
-    to: dateRange?.to?.toISOString(),
-    sportType,
-    orderBy,
-  });
+  const { pagination, setPagination, skip, take } = usePagination();
+  const { data } = useActivityList({ orderBy, skip, take });
 
   const table = useReactTable({
     data: data?.data ?? [],

@@ -1,7 +1,6 @@
 import { SortingState } from "@tanstack/react-table";
 import { useState } from "react";
-
-type OrderBy = Record<string, "asc" | "desc">;
+import { OrderBy } from "utils/prisma";
 
 export const useSorting = (defaultOrder: OrderBy = {}) => {
   const [sorting, setSorting] = useState<SortingState>(

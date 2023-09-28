@@ -13,7 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useAggregation } from "hooks/activity";
+import { useActivityAggregation } from "hooks/activity";
 import { useStore } from "hooks/store";
 import { Clock, Footprints, Rocket, Search, Sigma } from "lucide-react";
 import { Metadata } from "next";
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 
 export default function DashboardPage() {
   const dateRange = useStore((state) => state.dateRange);
-  const { data } = useAggregation({ dateRange });
+  const { data } = useActivityAggregation({ dateRange });
 
   const distance = data?.[0]._sum?.distance ?? 0;
   const totalElevationGain = data?.[0]._sum?.total_elevation_gain ?? 0;

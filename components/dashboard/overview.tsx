@@ -1,18 +1,18 @@
 "use client";
 
 import { startOfYear } from "date-fns";
-import { useAggregation } from "hooks/activity";
+import { useActivityAggregation } from "hooks/activity";
 import { useStore } from "hooks/store";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
-const DEFAULT_DATE_RANGE = {
+const START_OF_YEAR = {
   from: startOfYear(new Date()),
 };
 
 export function Overview() {
   const aggregation = useStore((state) => state.aggregation);
-  const { data } = useAggregation({
-    dateRange: DEFAULT_DATE_RANGE,
+  const { data } = useActivityAggregation({
+    dateRange: START_OF_YEAR,
     by: ["start_month"],
     orderBy: {
       start_month: "asc",

@@ -1,3 +1,4 @@
+import { PaginationState } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
 
 export const usePagination = () => {
@@ -17,5 +18,7 @@ export const usePagination = () => {
   return {
     pagination,
     setPagination,
+    skip: pageIndex * pageSize,
+    take: pageSize,
   };
 };
