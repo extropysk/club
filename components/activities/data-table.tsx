@@ -9,8 +9,8 @@ import {
 } from "@tanstack/react-table";
 import * as React from "react";
 
-import { DataTablePagination } from "@/components/activities/data-table-pagination";
 import { DataTableToolbar } from "@/components/activities/data-table-toolbar";
+import { DataTablePagination } from "@/components/ui/data-table/pagination";
 import {
   Table,
   TableBody,
@@ -22,7 +22,7 @@ import {
 import { useDebounce } from "hooks/debounce";
 import { usePagination } from "hooks/pagination";
 import { useSorting } from "hooks/sorting";
-import { useState } from "react";
+import { useStore } from "hooks/store";
 import { trpc } from "utils/trpc";
 
 interface DataTableProps<TData, TValue> {
@@ -36,7 +36,9 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
 
-  const [filter, setFilter] = useState("");
+  const filter = useStore((state) => state.filter);
+  const sportType = useStore((state) => state.sportType);
+
   const { sorting, setSorting, orderBy } = useSorting({ start_date: "desc" });
   const { pagination, setPagination } = usePagination();
   const debouncedFilter = useDebounce(filter);
@@ -44,6 +46,7 @@ export function DataTable<TData, TValue>({
     filter: debouncedFilter,
     skip: pagination.pageIndex * pagination.pageSize,
     take: pagination.pageSize,
+    sportType,
     orderBy,
   });
 
@@ -69,7 +72,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} filter={filter} setFilter={setFilter} />
+      <DataTableToolbar table={table} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>

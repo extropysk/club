@@ -1,3 +1,4 @@
+import { SortingState } from "@tanstack/react-table";
 import { useState } from "react";
 
 type OrderBy = Record<string, "asc" | "desc">;
@@ -11,7 +12,7 @@ export const useSorting = (defaultOrder: OrderBy = {}) => {
   );
 
   const orderBy = sorting.reduce(
-    (a: OrderBy, v: SortingState) => ({
+    (a: OrderBy, v: any) => ({
       ...a,
       [v.id]: v.desc === true ? "desc" : "asc",
     }),

@@ -6,11 +6,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { SportType } from "@prisma/client";
-
-interface Props {
-  value?: string;
-  onChange: (value?: SportType) => void;
-}
+import { useStore } from "hooks/store";
 
 interface Data<T> {
   value: T;
@@ -40,12 +36,15 @@ const DATA: Data<SportType | "">[] = [
   },
 ];
 
-export const SportTypeSelect = ({ value, onChange }: Props) => {
+export const SportTypeSelect = () => {
+  const sportType = useStore((state) => state.sportType);
+  const setSportType = useStore((state) => state.setSportType);
+
   return (
     <Select
-      value={value ?? ""}
+      value={sportType ?? ""}
       onValueChange={(value) => {
-        onChange(value === "" ? undefined : (value as SportType));
+        setSportType(value === "" ? undefined : (value as SportType));
       }}
     >
       <SelectTrigger className="max-w-[120px]">

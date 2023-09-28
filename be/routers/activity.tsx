@@ -19,35 +19,32 @@ const ListSchema = z.object({
   skip: z.number().nonnegative().default(0),
   take: z.number().positive().lte(100).default(100),
   filter: z.string().optional(),
+  sportType: z.nativeEnum(SportType).optional(),
   orderBy: z.record(z.enum(["asc", "desc"])).optional(),
 });
 
 export const activityRouter = router({
   list: procedure()
     .input(ListSchema)
-    .query(async ({ ctx, input: { filter, orderBy, skip, take } }) => {
-      let where;
-      if (filter) {
-        {
-          where = {
-            OR: [{ name: { contains: filter } }],
-          };
-        }
+    .query(
+      async ({ ctx, input: { filter, orderBy, skip, take, sportType } }) => {
+        const where = {
+          OR: [{ name: { contains: filter } }],
+          sport_type: sportType,
+        };
+
+        const [total, data] = await prisma.$transaction([
+          prisma.activity.count({ where }),
+          prisma.activity.findMany({
+            where,
+            orderBy,
+            skip,
+            take,
+          }),
+        ]);
+        return { total, data };
       }
-
-      console.log(filter);
-
-      const [total, data] = await prisma.$transaction([
-        prisma.activity.count({ where }),
-        prisma.activity.findMany({
-          where,
-          orderBy,
-          skip,
-          take,
-        }),
-      ]);
-      return { total, data };
-    }),
+    ),
   dashboard: procedure()
     .input(DashboardSchema)
     .query(async ({ ctx, input }) => {

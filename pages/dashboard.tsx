@@ -19,8 +19,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SportType } from "@prisma/client";
 import { startOfMonth } from "date-fns";
+import { useStore } from "hooks/store";
 import { Clock, Footprints, Rocket, Search, Sigma } from "lucide-react";
 import { Metadata } from "next";
 import { useState } from "react";
@@ -42,7 +42,8 @@ export default function DashboardPage() {
     from: FROM_DATE,
     to: new Date(),
   });
-  const [sportType, setSportType] = useState<SportType>();
+
+  const sportType = useStore((state) => state.sportType);
 
   const { data: dashboardData } = trpc.activity.dashboard.useQuery({
     from: date?.from?.toISOString() ?? FROM_DATE.toISOString(),
@@ -72,7 +73,7 @@ export default function DashboardPage() {
             <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
             <div className="flex items-center space-x-2">
               <CalendarDateRangePicker value={date} onChange={setDate} />
-              <SportTypeSelect value={sportType} onChange={setSportType} />
+              <SportTypeSelect />
             </div>
           </div>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

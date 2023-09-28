@@ -6,21 +6,22 @@ import { Table } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-import { DataTableViewOptions } from "@/components/activities/data-table-view-options";
+import { SportTypeSelect } from "@/components/common/sport-type-select";
+import { DataTableViewOptions } from "@/components/ui/data-table/view-options";
+import { useStore } from "hooks/store";
 import { priorities, statuses } from "../data/data";
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
-  filter: string;
-  setFilter: (value: string) => void;
 }
 
 export function DataTableToolbar<TData>({
   table,
-  filter,
-  setFilter,
 }: DataTableToolbarProps<TData>) {
+  const filter = useStore((state) => state.filter);
+  const setFilter = useStore((state) => state.setFilter);
+
   const isFiltered = Boolean(filter);
 
   return (
@@ -34,6 +35,7 @@ export function DataTableToolbar<TData>({
           }}
           className="h-8 w-[150px] lg:w-[250px]"
         />
+        <SportTypeSelect />
         {table.getColumn("status") && (
           <DataTableFacetedFilter
             column={table.getColumn("status")}
