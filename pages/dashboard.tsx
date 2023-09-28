@@ -13,34 +13,26 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { startOfMonth } from "date-fns";
+import { useAggregation } from "hooks/activity";
 import { useStore } from "hooks/store";
 import { Clock, Footprints, Rocket, Search, Sigma } from "lucide-react";
 import { Metadata } from "next";
 import { durationToStr } from "utils/date";
 import { round } from "utils/num";
-import { trpc } from "utils/trpc";
 
 export const metadata: Metadata = {
   title: "Dashboard",
   description: "Example dashboard app built using the components.",
 };
 
-const DEFAULT_FROM = startOfMonth(new Date());
-
 export default function DashboardPage() {
-  const sportType = useStore((state) => state.sportType);
   const dateRange = useStore((state) => state.dateRange);
-  const { data: dashboardData } = trpc.activity.dashboard.useQuery({
-    from: dateRange?.from?.toISOString() ?? DEFAULT_FROM.toISOString(),
-    to: dateRange?.to?.toISOString(),
-    sportType,
-  });
+  const { data } = useAggregation({ dateRange });
 
-  const distance = dashboardData?._sum?.distance ?? 0;
-  const totalElevationGain = dashboardData?._sum?.total_elevation_gain ?? 0;
-  const movingTime = dashboardData?._sum?.moving_time ?? 0;
-  const count = dashboardData?._count?.id;
+  const distance = data?.[0]._sum?.distance ?? 0;
+  const totalElevationGain = data?.[0]._sum?.total_elevation_gain ?? 0;
+  const movingTime = data?.[0]._sum?.moving_time ?? 0;
+  const count = data?.[0]._count?.id;
   return (
     <>
       <div className="flex-col flex">
@@ -118,7 +110,7 @@ export default function DashboardPage() {
                 <Sigma size={12} />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{count ?? "?"}</div>
+                <div className="text-2xl font-bold">{count}</div>
                 <p className="text-xs text-muted-foreground">
                   +201 since last hour
                 </p>

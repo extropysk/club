@@ -1,18 +1,18 @@
 import { SportType } from ".prisma/client";
 import { prisma } from "be/prisma";
 import { procedure, router } from "be/trpc";
+import { processOrderBy } from "be/utils/prisma";
 import { z } from "zod";
 
-const DashboardSchema = z.object({
-  from: z.string().datetime(),
-  to: z.string().datetime().optional(),
-  sportType: z.nativeEnum(SportType).optional(),
-});
+export const BySchema = z.array(z.enum(["start_month", "user_id"])).optional();
+export const OrderBySchema = z.record(z.enum(["asc", "desc"])).optional();
 
-const OverviewSchema = z.object({
+const AggregationSchema = z.object({
   from: z.string().datetime(),
   to: z.string().datetime().optional(),
   sportType: z.nativeEnum(SportType).optional(),
+  orderBy: OrderBySchema,
+  by: BySchema,
 });
 
 const ListSchema = z.object({
@@ -22,13 +22,13 @@ const ListSchema = z.object({
   sportType: z.nativeEnum(SportType).optional(),
   from: z.string().datetime().optional(),
   to: z.string().datetime().optional(),
-  orderBy: z.record(z.enum(["asc", "desc"])).optional(),
+  orderBy: OrderBySchema,
 });
 
 export const activityRouter = router({
   list: procedure()
     .input(ListSchema)
-    .query(async ({ ctx, input }) => {
+    .query(async ({ input }) => {
       const where = {
         OR: [{ name: { contains: input.filter } }],
         sport_type: input.sportType,
@@ -49,33 +49,13 @@ export const activityRouter = router({
       ]);
       return { total, data };
     }),
-  dashboard: procedure()
-    .input(DashboardSchema)
+  aggregation: procedure()
+    .input(AggregationSchema)
     .query(async ({ ctx, input }) => {
-      return await prisma.activity.aggregate({
-        where: {
-          user_id: ctx.session.sub,
-          sport_type: input.sportType,
-          start_date: {
-            gte: input.from,
-            lte: input.to,
-          },
-        },
-        _sum: {
-          distance: true,
-          total_elevation_gain: true,
-          moving_time: true,
-        },
-        _count: {
-          id: true,
-        },
-      });
-    }),
-  overview: procedure()
-    .input(OverviewSchema)
-    .query(async ({ ctx, input }) => {
+      const orderBy = processOrderBy(input.orderBy);
+
       return await prisma.activity.groupBy({
-        by: ["start_month"],
+        by: input.by ?? ["user_id"],
         where: {
           user_id: ctx.session.sub,
           sport_type: input.sportType,
@@ -92,9 +72,7 @@ export const activityRouter = router({
         _count: {
           id: true,
         },
-        orderBy: {
-          start_month: "asc",
-        },
+        orderBy,
       });
     }),
 });

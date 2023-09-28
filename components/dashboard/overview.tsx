@@ -1,21 +1,27 @@
 "use client";
 
 import { startOfYear } from "date-fns";
+import { useAggregation } from "hooks/activity";
 import { useStore } from "hooks/store";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
-import { trpc } from "utils/trpc";
 
-const DEFAULT_FROM = startOfYear(new Date());
+const DEFAULT_DATE_RANGE = {
+  from: startOfYear(new Date()),
+};
 
 export function Overview() {
   const aggregation = useStore((state) => state.aggregation);
-  const { data: overviewData } = trpc.activity.overview.useQuery({
-    from: DEFAULT_FROM.toISOString(),
+  const { data } = useAggregation({
+    dateRange: DEFAULT_DATE_RANGE,
+    by: ["start_month"],
+    orderBy: {
+      start_month: "asc",
+    },
   });
 
   return (
     <ResponsiveContainer width="100%" height={350}>
-      <BarChart data={overviewData}>
+      <BarChart data={data}>
         <XAxis
           dataKey="start_month"
           stroke="#888888"
