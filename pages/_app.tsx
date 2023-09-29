@@ -1,6 +1,7 @@
 import { SessionProvider } from "next-auth/react";
 import "./styles.css";
 
+import { Toaster } from "@/components/ui/toaster";
 import type { Session } from "next-auth";
 import { ThemeProvider } from "next-themes";
 import type { AppProps } from "next/app";
@@ -21,6 +22,7 @@ function App({
         disableTransitionOnChange
       >
         <Component {...pageProps} />
+        <Toaster />
       </ThemeProvider>
     </SessionProvider>
   );
