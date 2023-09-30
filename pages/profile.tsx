@@ -1,21 +1,20 @@
 import Container from "@/components/common/container";
 import MainLayout from "@/components/common/main-layout";
-import { AppearanceForm } from "@/components/forms/appearance-form";
+import { ProfileForm } from "@/components/forms/profile-form";
 import { Separator } from "@/components/ui/separator";
 
-export default function SettingsAppearancePage() {
+export default function SettingsProfilePage() {
   return (
     <MainLayout>
       <Container>
         <div>
-          <h3 className="text-lg font-medium">Appearance</h3>
+          <h3 className="text-lg font-medium">Profile</h3>
           <p className="text-sm text-muted-foreground">
-            Customize the appearance of the app. Automatically switch between
-            day and night themes.
+            This is how others will see you on the site.
           </p>
         </div>
         <Separator />
-        <AppearanceForm />
+        <ProfileForm />
       </Container>
     </MainLayout>
   );
