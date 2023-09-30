@@ -4,6 +4,7 @@ import * as React from "react";
 
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
+import { ROUTES } from "constants/routes";
 import { signIn } from "next-auth/react";
 import { cn } from "utils/ui";
 
@@ -25,7 +26,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       <Button
         variant="outline"
         type="button"
-        onClick={() => signIn("strava", { callbackUrl: "/" })}
+        onClick={() => signIn("strava", { callbackUrl: ROUTES.home })}
       >
         <Icons.strava className="mr-2 h-4 w-4" />
         Strava

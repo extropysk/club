@@ -9,7 +9,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ROUTES } from "constants/routes";
 import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 import { getAbbreviation } from "utils/string";
 
 export function UserNav() {
@@ -41,13 +43,15 @@ export function UserNav() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>Profile</DropdownMenuItem>
-          <DropdownMenuItem>Billing</DropdownMenuItem>
+          <Link href={ROUTES.appearance}>
+            <DropdownMenuItem>Appearance</DropdownMenuItem>
+          </Link>
           <DropdownMenuItem>Settings</DropdownMenuItem>
           <DropdownMenuItem>New Team</DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          onClick={() => signOut({ redirect: false, callbackUrl: "/auth" })}
+          onClick={() => signOut({ redirect: false, callbackUrl: ROUTES.auth })}
         >
           Log out
         </DropdownMenuItem>

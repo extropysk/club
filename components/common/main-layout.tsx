@@ -1,5 +1,6 @@
 import { MainNav } from "@/components/header/main-nav";
 import { UserNav } from "@/components/header/user-nav";
+import { ROUTES } from "constants/routes";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -16,7 +17,7 @@ export default function MainLayout({ children }: Props) {
 
   useEffect(() => {
     if (session === null) {
-      push("/auth");
+      push(ROUTES.auth);
     }
   }, [session, push]);
 

@@ -1,6 +1,7 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
 import { sync } from "be/utils/strava";
+import { ROUTES } from "constants/routes";
 import jsonwebtoken from "jsonwebtoken";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import StravaProvider from "next-auth/providers/strava";
@@ -10,7 +11,7 @@ const prisma = new PrismaClient();
 // https://next-auth.js.org/configuration/options
 export const authOptions: NextAuthOptions = {
   pages: {
-    signIn: "/auth",
+    signIn: ROUTES.auth,
   },
   adapter: PrismaAdapter(prisma),
   secret: process.env.NEXTAUTH_SECRET,
