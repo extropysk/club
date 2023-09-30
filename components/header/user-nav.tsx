@@ -42,12 +42,12 @@ export function UserNav() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>Profile</DropdownMenuItem>
+          <Link href={ROUTES.profile}>
+            <DropdownMenuItem>Profile</DropdownMenuItem>
+          </Link>
           <Link href={ROUTES.appearance}>
             <DropdownMenuItem>Appearance</DropdownMenuItem>
           </Link>
-          <DropdownMenuItem>Settings</DropdownMenuItem>
-          <DropdownMenuItem>New Team</DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem
