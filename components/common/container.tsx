@@ -12,8 +12,8 @@ const Container = ({ children, fullWidth, title, description }: Props) => {
     <div className="flex justify-center p-6">
       <div className={cn("space-y-6", fullWidth ? "w-full" : "max-w-lg")}>
         <div>
-          <h3 className="text-lg font-medium">{title}</h3>
-          <p className="text-sm text-muted-foreground">{description}</p>
+          <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
+          <p className="text-muted-foreground">{description}</p>
         </div>
         {children}
       </div>
