@@ -9,7 +9,7 @@ import {
 } from "@tanstack/react-table";
 import * as React from "react";
 
-import { DataTableToolbar } from "@/components/activities/data-table-toolbar";
+import { DataTableToolbar } from "@/components/common/data-table-toolbar";
 import { DataTablePagination } from "@/components/ui/data-table/pagination";
 import {
   Table,

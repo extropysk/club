@@ -1,47 +1,26 @@
 import { columns } from "@/components/activities/columns";
 import { DataTable } from "@/components/activities/data-table";
-import { UserNav } from "@/components/activities/user-nav";
+import Container from "@/components/common/container";
+import MainLayout from "@/components/common/main-layout";
 import { Metadata } from "next";
-import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Tasks",
   description: "A task and issue tracker build using Tanstack Table.",
 };
 
-export default function TaskPage() {
+export default function ActivitiesPage() {
   return (
-    <>
-      <div className="md:hidden">
-        <Image
-          src="/examples/tasks-light.png"
-          width={1280}
-          height={998}
-          alt="Playground"
-          className="block dark:hidden"
-        />
-        <Image
-          src="/examples/tasks-dark.png"
-          width={1280}
-          height={998}
-          alt="Playground"
-          className="hidden dark:block"
-        />
-      </div>
-      <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
-        <div className="flex items-center justify-between space-y-2">
-          <div>
-            <h2 className="text-2xl font-bold tracking-tight">Welcome back!</h2>
-            <p className="text-muted-foreground">
-              Here&apos;s a list of your tasks for this month!
-            </p>
-          </div>
-          <div className="flex items-center space-x-2">
-            <UserNav />
-          </div>
+    <MainLayout>
+      <Container fullWidth>
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">Welcome back!</h2>
+          <p className="text-muted-foreground">
+            Here&apos;s a list of your tasks for this month!
+          </p>
         </div>
         <DataTable columns={columns} />
-      </div>
-    </>
+      </Container>
+    </MainLayout>
   );
 }
