@@ -10,15 +10,21 @@ import { z } from "zod";
 const START_OF_MONTH = startOfMonth(new Date());
 
 interface AggregationParams {
-  orderBy?: z.infer<typeof OrderBySchema>;
-  by?: z.infer<typeof BySchema>;
+  orderBy: z.infer<typeof OrderBySchema>;
+  by: z.infer<typeof BySchema>;
   dateRange?: DateRange;
+  isPublic?: boolean;
+  skip?: number;
+  take?: number;
 }
 
 export const useActivityAggregation = ({
   orderBy,
   by,
   dateRange,
+  isPublic,
+  skip,
+  take,
 }: AggregationParams) => {
   const sportType = useStore((state) => state.sportType);
 
@@ -28,6 +34,9 @@ export const useActivityAggregation = ({
     sportType,
     orderBy,
     by,
+    isPublic,
+    skip,
+    take,
   });
 };
 
