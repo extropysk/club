@@ -3,7 +3,7 @@ import { prisma } from "be/prisma";
 import { procedure, router } from "be/trpc";
 import { z } from "zod";
 
-const ListSchema = z.object({
+const UserListSchema = z.object({
   skip: z.number().nonnegative().default(0),
   take: z.number().positive().lte(100).default(100),
   filter: z.string().optional(),
@@ -12,6 +12,10 @@ const ListSchema = z.object({
 
 const UserUpdateSchema = z.object({
   email: z.string().email(),
+});
+
+const UserByIdSchema = z.object({
+  id: z.string(),
 });
 
 export const userRouter = router({
@@ -39,8 +43,13 @@ export const userRouter = router({
   current: procedure().query(async ({ ctx }) => {
     return await prisma.user.findUnique({ where: { id: ctx.session.sub } });
   }),
+  byId: procedure()
+    .input(UserByIdSchema)
+    .query(async ({ input }) => {
+      return await prisma.user.findUnique({ where: { id: input.id } });
+    }),
   list: procedure("admin")
-    .input(ListSchema)
+    .input(UserListSchema)
     .query(async ({ input: { filter, orderBy, skip, take } }) => {
       let where;
       if (filter) {

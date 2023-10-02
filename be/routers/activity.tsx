@@ -4,12 +4,14 @@ import { procedure, router } from "be/trpc";
 import { processOrderBy } from "utils/prisma";
 import { z } from "zod";
 
-export const BySchema = z.array(z.enum(["start_month", "user_id"]));
+export const BySchema = z.array(
+  z.enum(["start_month", "user_id", "athlete_id"])
+);
 export const OrderBySchema = z.record(z.enum(["asc", "desc"]));
 const SkipSchema = z.number().nonnegative().default(0);
 const TakeSchema = z.number().positive().lte(100).default(100);
 
-const AggregationSchema = z.object({
+const ActivityAggregationSchema = z.object({
   from: z.string().datetime(),
   to: z.string().datetime().optional(),
   sportType: z.nativeEnum(SportType).optional(),
@@ -20,7 +22,7 @@ const AggregationSchema = z.object({
   take: TakeSchema,
 });
 
-const ListSchema = z.object({
+const ActivityListSchema = z.object({
   skip: SkipSchema,
   take: TakeSchema,
   filter: z.string().optional(),
@@ -33,7 +35,7 @@ const ListSchema = z.object({
 
 export const activityRouter = router({
   list: procedure()
-    .input(ListSchema)
+    .input(ActivityListSchema)
     .query(async ({ ctx, input }) => {
       const where = {
         OR: [{ name: { contains: input.filter } }],
@@ -58,7 +60,7 @@ export const activityRouter = router({
       return { total, data };
     }),
   aggregation: procedure()
-    .input(AggregationSchema)
+    .input(ActivityAggregationSchema)
     .query(async ({ ctx, input }) => {
       const where = {
         user_id: input.isPublic ? undefined : ctx.session.sub,

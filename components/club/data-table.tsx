@@ -40,7 +40,7 @@ export function DataTable<TData>({ columns }: DataTableProps<TData>) {
   const dateRange = useStore((state) => state.dateRange);
   const { data } = useActivityAggregation({
     dateRange,
-    by: ["user_id"],
+    by: ["user_id", "athlete_id"],
     isPublic: true,
     orderBy,
     skip,

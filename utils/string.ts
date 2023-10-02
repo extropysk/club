@@ -1,4 +1,4 @@
-export const getAbbreviation = (input?: string | null) => {
+export const getAbbreviation = (input: string | null | undefined) => {
   if (!input) {
     return "?";
   }

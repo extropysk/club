@@ -9,7 +9,7 @@ import { z } from "zod";
 
 const START_OF_MONTH = startOfMonth(new Date());
 
-interface AggregationParams {
+interface ActivityAggregationParams {
   orderBy: z.infer<typeof OrderBySchema>;
   by: z.infer<typeof BySchema>;
   dateRange?: DateRange;
@@ -25,7 +25,7 @@ export const useActivityAggregation = ({
   isPublic,
   skip,
   take,
-}: AggregationParams) => {
+}: ActivityAggregationParams) => {
   const sportType = useStore((state) => state.sportType);
 
   return trpc.activity.aggregation.useQuery({
@@ -40,13 +40,17 @@ export const useActivityAggregation = ({
   });
 };
 
-interface ListParams {
+interface ActivityListParams {
   orderBy: OrderBy;
   skip: number;
   take: number;
 }
 
-export const useActivityList = ({ skip, take, orderBy }: ListParams) => {
+export const useActivityList = ({
+  skip,
+  take,
+  orderBy,
+}: ActivityListParams) => {
   const filter = useStore((state) => state.filter);
   const sportType = useStore((state) => state.sportType);
   const dateRange = useStore((state) => state.dateRange);

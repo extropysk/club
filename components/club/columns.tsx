@@ -2,6 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 
+import UserCell from "@/components/club/user-cell";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "../ui/data-table/column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
@@ -33,11 +34,16 @@ export const columns: ColumnDef<any>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "id",
+    accessorKey: "user_id",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="ID" />
+      <DataTableColumnHeader column={column} title="User" />
     ),
-    cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
+    cell: ({ row }) => (
+      <UserCell
+        id={row.getValue("user_id")}
+        athleteId={row.original.athlete_id}
+      />
+    ),
     enableSorting: false,
     enableHiding: false,
   },
