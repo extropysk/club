@@ -1,7 +1,7 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import { Context } from "./context";
 
-BigInt.prototype.toJSON = function () {
+(BigInt as any).prototype.toJSON = function () {
   const int = Number.parseInt(this.toString());
   return int ?? this.toString();
 };

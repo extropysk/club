@@ -7,7 +7,7 @@ export default function ProtectedPage() {
   const { data: session } = useSession();
 
   const { data: users } = trpc.user.list.useQuery(
-    { orderBy: { name: "asc" }, fields: ["email", "name"] },
+    { orderBy: { name: "asc" } },
     {
       enabled: !!session,
     }

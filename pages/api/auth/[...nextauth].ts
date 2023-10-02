@@ -3,7 +3,10 @@ import { PrismaClient } from "@prisma/client";
 import { sync } from "be/utils/strava";
 import { ROUTES } from "constants/routes";
 import jsonwebtoken from "jsonwebtoken";
-import NextAuth, { NextAuthOptions } from "next-auth";
+import { Adapter } from "next-auth/adapters";
+import { NextAuthOptions } from "next-auth/index";
+import { JWT } from "next-auth/jwt";
+import NextAuth from "next-auth/next";
 import StravaProvider from "next-auth/providers/strava";
 
 const prisma = new PrismaClient();
@@ -13,20 +16,20 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: ROUTES.auth,
   },
-  adapter: PrismaAdapter(prisma),
+  adapter: PrismaAdapter(prisma) as Adapter,
   secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
   },
   jwt: {
     encode: async ({ secret, token, maxAge }) => {
-      const claims = { ...token, exp: Math.floor(Date.now() / 1000) + maxAge };
+      const claims = { ...token, exp: Math.floor(Date.now() / 1000) + maxAge! };
       return jsonwebtoken.sign(claims, secret, {
         algorithm: "HS256",
       });
     },
     decode: async ({ secret, token }) => {
-      return jsonwebtoken.verify(token, secret);
+      return jsonwebtoken.verify(token!, secret) as JWT;
     },
   },
   // https://next-auth.js.org/configuration/providers/oauth

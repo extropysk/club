@@ -2,7 +2,7 @@ import { SessionProvider } from "next-auth/react";
 import "./styles.css";
 
 import { Toaster } from "@/components/ui/toaster";
-import type { Session } from "next-auth";
+import { Session } from "next-auth/core/types";
 import { ThemeProvider } from "next-themes";
 import type { AppProps } from "next/app";
 import { trpc } from "utils/trpc";

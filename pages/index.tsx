@@ -34,7 +34,8 @@ export default function DashboardPage() {
   const distance = data?.data?.[0]?._sum?.distance ?? 0;
   const totalElevationGain = data?.data?.[0]?._sum?.total_elevation_gain ?? 0;
   const movingTime = data?.data?.[0]?._sum?.moving_time ?? 0;
-  const count = data?.data?.[0]?._count?.id ?? 0;
+  const count =
+    typeof data?.data?.[0]?._count === "object" ? data.data[0]._count.id : 0;
   return (
     <Layout>
       <div className="flex-1 space-y-4 p-8 pt-6">
