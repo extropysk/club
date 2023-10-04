@@ -47,7 +47,7 @@ export const SportTypeSelect = () => {
         setSportType(value === "" ? undefined : (value as SportType));
       }}
     >
-      <SelectTrigger className="max-w-[120px]">
+      <SelectTrigger className="min-w-[120px] w-fit">
         <SelectValue placeholder="Select a sport" />
       </SelectTrigger>
       <SelectContent>

@@ -1,6 +1,5 @@
 import { BySchema, OrderBySchema } from "be/routers/activity";
 import { startOfMonth } from "date-fns";
-import { useDebounce } from "hooks/debounce";
 import { useStore } from "hooks/store";
 import { DateRange } from "react-day-picker";
 import { OrderBy } from "utils/prisma";
@@ -51,13 +50,10 @@ export const useActivityList = ({
   take,
   orderBy,
 }: ActivityListParams) => {
-  const filter = useStore((state) => state.filter);
   const sportType = useStore((state) => state.sportType);
   const dateRange = useStore((state) => state.dateRange);
-  const debouncedFilter = useDebounce(filter);
 
   return trpc.activity.list.useQuery({
-    filter: debouncedFilter,
     skip,
     take,
     from: dateRange?.from?.toISOString(),

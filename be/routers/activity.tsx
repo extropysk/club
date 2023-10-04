@@ -25,7 +25,6 @@ const ActivityAggregationSchema = z.object({
 const ActivityListSchema = z.object({
   skip: SkipSchema,
   take: TakeSchema,
-  filter: z.string().optional(),
   sportType: z.nativeEnum(SportType).optional(),
   from: z.string().datetime().optional(),
   to: z.string().datetime().optional(),
@@ -38,7 +37,6 @@ export const activityRouter = router({
     .input(ActivityListSchema)
     .query(async ({ ctx, input }) => {
       const where = {
-        OR: [{ name: { contains: input.filter } }],
         sport_type: input.sportType,
         user_id: input.isPublic ? undefined : ctx.session.sub,
         start_date: {

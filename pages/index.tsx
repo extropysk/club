@@ -42,8 +42,8 @@ export default function DashboardPage() {
         <div className="flex items-center justify-between space-y-2 flex-wrap">
           <h2 className="text-2xl font-bold tracking-tight">Dashboard</h2>
           <div className="flex items-center space-x-2">
-            <CalendarDateRangePicker />
             <SportTypeSelect />
+            <CalendarDateRangePicker />
           </div>
         </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
