@@ -1,4 +1,5 @@
 import { prisma } from "be/prisma";
+import { format, startOfYear } from "date-fns";
 import { dateToEpoch } from "utils/date";
 
 export const sync = async (userId: string, token: string | undefined) => {
@@ -13,7 +14,7 @@ export const sync = async (userId: string, token: string | undefined) => {
   });
 
   const lastActivityStartDate =
-    lastActivity?.start_date ?? new Date(2023, 0, 1);
+    lastActivity?.start_date ?? startOfYear(new Date());
 
   let page = 1;
   let hasNextPage = false;
@@ -38,8 +39,10 @@ export const sync = async (userId: string, token: string | undefined) => {
         a.map_summary_polyline = a.map?.summary_polyline;
         a.map = undefined;
         a.user_id = userId;
-        a.start_date = a.start_date ?? new Date(a.start_date);
-        a.start_date_local = a.start_date_local ?? new Date(a.start_date_local);
+        a.start_date_local = new Date(a.start_date_local);
+        a.start_date = new Date(a.start_date);
+        a.start_year = +format(a.start_date, "yyyy");
+        a.start_month = +format(a.start_date, "yyyyMM");
         return a;
       });
 
