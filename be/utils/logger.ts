@@ -14,7 +14,7 @@ const buildStream = () => {
         labels: {
           app: "club",
           env: process.env.NODE_ENV,
-          version: process.env.VERCEL_GITHUB_COMMIT_SHA!,
+          version: process.env.NEXT_PUBLIC_VERSION!,
         },
         basicAuth: {
           username: credentials[0],

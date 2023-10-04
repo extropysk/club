@@ -29,7 +29,9 @@ export default function AuthenticationPage() {
         </div>
         <div className="relative z-20 mt-auto">
           <blockquote className="space-y-2">
-            <footer className="text-sm">Record. Sweat. Share. Kudos.</footer>
+            <footer className="text-sm">
+              {process.env.NEXT_PUBLIC_VERSION}
+            </footer>
           </blockquote>
         </div>
       </div>
