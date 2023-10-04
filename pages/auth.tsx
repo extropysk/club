@@ -30,7 +30,7 @@ export default function AuthenticationPage() {
         <div className="relative z-20 mt-auto">
           <blockquote className="space-y-2">
             <footer className="text-sm">
-              {process.env.NEXT_PUBLIC_VERSION}
+              {process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA}
             </footer>
           </blockquote>
         </div>
