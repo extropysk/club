@@ -1,4 +1,5 @@
 import { prisma } from "be/prisma";
+import { logger } from "be/utils/logger";
 import { format, startOfYear } from "date-fns";
 import { dateToEpoch } from "utils/date";
 
@@ -58,7 +59,8 @@ export const sync = async (userId: string, token: string | undefined) => {
       }
       page++;
     } while (hasNextPage);
+    logger.info({ userId }, "synced");
   } catch (error) {
-    console.error(error);
+    logger.error(error);
   }
 };

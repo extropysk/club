@@ -11,9 +11,7 @@ import { DataTableColumnHeader } from "../ui/data-table/column-header";
 export const columns: ColumnDef<Activity>[] = [
   {
     accessorKey: "start_date",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Date" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} />,
     cell: ({ row }) => (
       <div className="w-[80px]">
         {dateToStr(new Date(row.getValue("start_date")))}
@@ -24,9 +22,7 @@ export const columns: ColumnDef<Activity>[] = [
   },
   {
     accessorKey: "name",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Activity" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} />,
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
@@ -40,9 +36,7 @@ export const columns: ColumnDef<Activity>[] = [
   },
   {
     accessorKey: "distance",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Distance" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} />,
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
@@ -55,9 +49,7 @@ export const columns: ColumnDef<Activity>[] = [
   },
   {
     accessorKey: "total_elevation_gain",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Elevation gain" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} />,
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
@@ -70,9 +62,7 @@ export const columns: ColumnDef<Activity>[] = [
   },
   {
     accessorKey: "moving_time",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Moving time" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} />,
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">

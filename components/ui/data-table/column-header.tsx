@@ -14,19 +14,21 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useTranslation } from "hooks/translation";
 import { cn } from "utils/ui";
 
 interface DataTableColumnHeaderProps<TData, TValue>
   extends React.HTMLAttributes<HTMLDivElement> {
   column: Column<TData, TValue>;
-  title: string;
 }
 
 export function DataTableColumnHeader<TData, TValue>({
   column,
-  title,
   className,
 }: DataTableColumnHeaderProps<TData, TValue>) {
+  const { t } = useTranslation();
+  const title = t(`fields:${column.id}.title`);
+
   if (!column.getCanSort()) {
     return <div className={cn(className)}>{title}</div>;
   }

@@ -12,6 +12,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { useTranslation } from "hooks/translation";
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>;
@@ -20,6 +21,8 @@ interface DataTableViewOptionsProps<TData> {
 export function DataTableViewOptions<TData>({
   table,
 }: DataTableViewOptionsProps<TData>) {
+  const { t } = useTranslation();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -51,7 +54,7 @@ export function DataTableViewOptions<TData>({
                   column.toggleVisibility(!!value);
                 }}
               >
-                {column.id}
+                {t(`fields:${column.id}.title`)}
               </DropdownMenuCheckboxItem>
             );
           })}

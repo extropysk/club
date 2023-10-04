@@ -14,7 +14,8 @@ import {
 import { useActivityAggregation } from "hooks/activity";
 import { useStore } from "hooks/store";
 import { Clock, Footprints, Rocket, Sigma } from "lucide-react";
-import { Metadata } from "next";
+import { GetStaticProps, Metadata } from "next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { durationToStr } from "utils/date";
 import { round } from "utils/num";
 
@@ -131,3 +132,9 @@ export default function DashboardPage() {
     </Layout>
   );
 }
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale ?? "en")),
+  },
+});

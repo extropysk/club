@@ -35,9 +35,7 @@ export const columns: ColumnDef<any>[] = [
   },
   {
     accessorKey: "user_id",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="User" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} />,
     cell: ({ row }) => (
       <UserCell
         id={row.getValue("user_id")}
@@ -50,9 +48,7 @@ export const columns: ColumnDef<any>[] = [
   {
     id: "_sum.distance",
     accessorFn: (row) => row._sum.distance,
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Distance" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} />,
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
