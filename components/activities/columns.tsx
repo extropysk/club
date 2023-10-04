@@ -54,7 +54,7 @@ export const columns: ColumnDef<Activity>[] = [
       return (
         <div className="flex space-x-2">
           <span className="max-w-[500px] truncate font-medium">
-            {round(row.getValue<number>("total_elevation_gain"))}
+            {row.getValue<number>("total_elevation_gain")}
           </span>
         </div>
       );

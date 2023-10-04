@@ -3,19 +3,22 @@ import { CalendarDateRangePicker } from "@/components/common/date-range-picker";
 import Layout from "@/components/common/main-layout";
 import { SportTypeSelect } from "@/components/common/sport-type-select";
 import { Overview } from "@/components/dashboard/overview";
-import { RecentSales } from "@/components/dashboard/recent-sales";
+import { RecentActivities } from "@/components/dashboard/recent-activities";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ROUTES } from "constants/routes";
 import { useActivityAggregation } from "hooks/activity";
 import { useStore } from "hooks/store";
 import { Clock, Footprints, Rocket, Sigma } from "lucide-react";
 import { GetStaticProps, Metadata } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import Link from "next/link";
 import { durationToStr } from "utils/date";
 import { round } from "utils/num";
 
@@ -43,8 +46,8 @@ export default function DashboardPage() {
         <div className="flex items-center justify-between space-y-2 flex-wrap">
           <h2 className="text-2xl font-bold tracking-tight">Dashboard</h2>
           <div className="flex items-center space-x-2">
-            <SportTypeSelect />
             <CalendarDateRangePicker />
+            <SportTypeSelect />
           </div>
         </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -71,9 +74,7 @@ export default function DashboardPage() {
               <Rocket size={12} />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{`${round(
-                totalElevationGain
-              )} m`}</div>
+              <div className="text-2xl font-bold">{`${totalElevationGain} m`}</div>
               <p className="text-xs text-muted-foreground">
                 +180.1% from last month
               </p>
@@ -120,12 +121,19 @@ export default function DashboardPage() {
           </Card>
           <Card className="col-span-3">
             <CardHeader>
-              <CardTitle>Recent Sales</CardTitle>
-              <CardDescription>You made 265 sales this month.</CardDescription>
+              <CardTitle>Recent activities</CardTitle>
             </CardHeader>
             <CardContent>
-              <RecentSales />
+              <RecentActivities />
             </CardContent>
+            <CardFooter className="flex">
+              <Link
+                href={ROUTES.activities}
+                className={buttonVariants({ variant: "link" })}
+              >
+                show more
+              </Link>
+            </CardFooter>
           </Card>
         </div>
       </div>

@@ -43,15 +43,16 @@ interface ActivityListParams {
   orderBy: OrderBy;
   skip: number;
   take: number;
+  dateRange?: DateRange;
 }
 
 export const useActivityList = ({
   skip,
   take,
   orderBy,
+  dateRange,
 }: ActivityListParams) => {
   const sportType = useStore((state) => state.sportType);
-  const dateRange = useStore((state) => state.dateRange);
 
   return trpc.activity.list.useQuery({
     skip,

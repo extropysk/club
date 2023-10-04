@@ -22,6 +22,7 @@ import {
 import { useActivityList } from "hooks/activity";
 import { usePagination } from "hooks/pagination";
 import { useSorting } from "hooks/sorting";
+import { useStore } from "hooks/store";
 
 interface DataTableProps<TData> {
   columns: ColumnDef<TData>[];
@@ -38,7 +39,8 @@ export function DataTable<TData>({
 
   const { sorting, setSorting, orderBy } = useSorting({ start_date: "desc" });
   const { pagination, setPagination, skip, take } = usePagination();
-  const { data } = useActivityList({ orderBy, skip, take });
+  const dateRange = useStore((state) => state.dateRange);
+  const { data } = useActivityList({ orderBy, skip, take, dateRange });
 
   const table = useReactTable({
     data: (data?.data as TData[]) ?? [],

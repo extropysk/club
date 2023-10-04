@@ -24,10 +24,9 @@ export function Overview() {
     switch (aggregation) {
       case "_sum.distance":
         return round(value / 1000, 1);
-      case "_sum.total_elevation_gain":
-        return round(value);
       case "_sum.moving_time":
         return round(value / 60);
+      case "_sum.total_elevation_gain":
       default:
         return value;
     }
