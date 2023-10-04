@@ -25,9 +25,13 @@ import { useSorting } from "hooks/sorting";
 
 interface DataTableProps<TData> {
   columns: ColumnDef<TData>[];
+  toolbarHidden?: boolean;
 }
 
-export function DataTable<TData>({ columns }: DataTableProps<TData>) {
+export function DataTable<TData>({
+  columns,
+  toolbarHidden,
+}: DataTableProps<TData>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -58,7 +62,7 @@ export function DataTable<TData>({ columns }: DataTableProps<TData>) {
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} />
+      {!toolbarHidden && <DataTableToolbar table={table} />}
       <div className="rounded-md border">
         <Table>
           <TableHeader>

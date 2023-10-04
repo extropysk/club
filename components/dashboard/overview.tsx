@@ -23,7 +23,7 @@ export function Overview() {
   const formatValue = (value: any) => {
     switch (aggregation) {
       case "_sum.distance":
-        return round(value / 1000, 2);
+        return round(value / 1000, 1);
       case "_sum.total_elevation_gain":
         return round(value);
       case "_sum.moving_time":

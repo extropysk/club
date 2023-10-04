@@ -3,50 +3,29 @@
 import { ColumnDef } from "@tanstack/react-table";
 
 import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Activity } from "@prisma/client";
+import { dateToStr, durationToStr } from "utils/date";
+import { round } from "utils/num";
 import { DataTableColumnHeader } from "../ui/data-table/column-header";
-import { DataTableRowActions } from "./data-table-row-actions";
 
 export const columns: ColumnDef<Activity>[] = [
   {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected()}
-        onCheckedChange={(value) => {
-          table.toggleAllPageRowsSelected(!!value);
-        }}
-        aria-label="Select all"
-        className="translate-y-[2px]"
-      />
+    accessorKey: "start_date",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Date" />
     ),
     cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => {
-          row.toggleSelected(!!value);
-        }}
-        aria-label="Select row"
-        className="translate-y-[2px]"
-      />
+      <div className="w-[80px]">
+        {dateToStr(new Date(row.getValue("start_date")))}
+      </div>
     ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "id",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="ID" />
-    ),
-    cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
     enableSorting: false,
     enableHiding: false,
   },
   {
     accessorKey: "name",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Name" />
+      <DataTableColumnHeader column={column} title="Activity" />
     ),
     cell: ({ row }) => {
       return (
@@ -60,22 +39,48 @@ export const columns: ColumnDef<Activity>[] = [
     },
   },
   {
-    accessorKey: "start_date",
+    accessorKey: "distance",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Start Date" />
+      <DataTableColumnHeader column={column} title="Distance" />
     ),
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
           <span className="max-w-[500px] truncate font-medium">
-            {row.getValue("start_date")}
+            {round(row.getValue<number>("distance") / 1000, 1)}
           </span>
         </div>
       );
     },
   },
   {
-    id: "actions",
-    cell: ({ row }) => <DataTableRowActions row={row} />,
+    accessorKey: "total_elevation_gain",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Elevation gain" />
+    ),
+    cell: ({ row }) => {
+      return (
+        <div className="flex space-x-2">
+          <span className="max-w-[500px] truncate font-medium">
+            {round(row.getValue<number>("total_elevation_gain"))}
+          </span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "moving_time",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Moving time" />
+    ),
+    cell: ({ row }) => {
+      return (
+        <div className="flex space-x-2">
+          <span className="max-w-[500px] truncate font-medium">
+            {durationToStr(row.getValue<number>("moving_time"))}
+          </span>
+        </div>
+      );
+    },
   },
 ];

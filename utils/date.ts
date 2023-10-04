@@ -1,3 +1,5 @@
+const LOCALE = "en-US";
+
 export const dateToEpoch = (value: Date): number => {
   return Math.floor(value.getTime() / 1000);
 };
@@ -8,4 +10,8 @@ export const durationToStr = (value: number): string => {
   const s = value % 60;
 
   return [h, m > 9 ? m : "0" + m, s > 9 ? s : "0" + s].join(":");
+};
+
+export const dateToStr = (value: Date): string => {
+  return value.toLocaleDateString(LOCALE);
 };
