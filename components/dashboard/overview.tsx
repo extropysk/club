@@ -4,6 +4,7 @@ import { startOfYear } from "date-fns";
 import { useActivityAggregation } from "hooks/activity";
 import { useStore } from "hooks/store";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
+import { round } from "utils/num";
 
 const START_OF_YEAR = {
   from: startOfYear(new Date()),
@@ -18,6 +19,19 @@ export function Overview() {
       start_month: "asc",
     },
   });
+
+  const formatValue = (value: any) => {
+    switch (aggregation) {
+      case "_sum.distance":
+        return round(value / 1000, 2);
+      case "_sum.total_elevation_gain":
+        return round(value);
+      case "_sum.moving_time":
+        return round(value / 60);
+      default:
+        return value;
+    }
+  };
 
   return (
     <ResponsiveContainer width="100%" height={350}>
@@ -34,7 +48,7 @@ export function Overview() {
           fontSize={12}
           tickLine={false}
           axisLine={false}
-          tickFormatter={(value) => `${value}`}
+          tickFormatter={formatValue}
         />
         <Bar
           dataKey={aggregation}
