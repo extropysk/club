@@ -32,7 +32,11 @@ export const sync = async (userId: string, token: string | undefined) => {
       });
 
       const data = await res.json();
-      logger.info(data, "sync.data");
+      logger.info(data);
+      if (data.errors) {
+        throw new Error(data.message);
+      }
+
       const activities = data.map((a: any) => {
         a.id = a.id.toString();
         a.resource_state = undefined;
@@ -48,7 +52,6 @@ export const sync = async (userId: string, token: string | undefined) => {
         a.start_month = +format(a.start_date, "yyyyMM");
         return a;
       });
-      logger.info(data, "sync.activities");
 
       if (activities.length > 0) {
         hasNextPage = true;
