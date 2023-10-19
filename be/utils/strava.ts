@@ -31,7 +31,9 @@ export const sync = async (userId: string, token: string | undefined) => {
         },
       });
 
-      const data = (await res.json()).map((a: any) => {
+      const data = await res.json();
+      logger.info(data, "sync.data");
+      const activities = data.map((a: any) => {
         a.id = a.id.toString();
         a.resource_state = undefined;
         a.athlete_id = a.athlete?.id;
@@ -46,11 +48,12 @@ export const sync = async (userId: string, token: string | undefined) => {
         a.start_month = +format(a.start_date, "yyyyMM");
         return a;
       });
+      logger.info(data, "sync.activities");
 
-      if (data.length > 0) {
+      if (activities.length > 0) {
         hasNextPage = true;
         const r = await prisma.activity.createMany({
-          data: data,
+          data: activities,
           skipDuplicates: true,
         });
         console.log("SYNC:" + r.count);
