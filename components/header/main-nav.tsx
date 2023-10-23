@@ -15,13 +15,7 @@ export function MainNav({
         href={ROUTES.home}
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
-        Overview
-      </Link>
-      <Link
-        href={ROUTES.profile}
-        className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-      >
-        Profile
+        Home
       </Link>
     </nav>
   );

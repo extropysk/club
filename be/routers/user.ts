@@ -59,11 +59,16 @@ export const userRouter = router({
           };
         }
       }
-      return await prisma.user.findMany({
-        where,
-        orderBy,
-        skip,
-        take,
-      });
+      const [total, data] = await prisma.$transaction([
+        prisma.user.count({ where }),
+        prisma.user.findMany({
+          where,
+          orderBy,
+          skip,
+          take,
+        }),
+      ]);
+
+      return { total, data };
     }),
 });

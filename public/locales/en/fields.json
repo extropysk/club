@@ -1,4 +1,6 @@
 {
+  "id": { "title": "ID" },
+  "email": { "title": "Email" },
   "name": { "title": "Name" },
   "distance": { "title": "Distance" },
   "total_elevation_gain": { "title": "Elevation gain" },
